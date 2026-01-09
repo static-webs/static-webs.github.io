@@ -1,3 +1,0 @@
-# Templates
-
-Static templates repository
