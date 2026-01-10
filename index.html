@@ -1,170 +1,573 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Templates · TuSitio.ar</title>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <title>TuSitio.ar - Templates</title>
+      <style>
+         body {
+            font-family: system-ui, sans-serif;
+            padding: 2rem;
+         }
+         ul {
+            list-style: none;
+            padding: 0;
+         }
+         li {
+            margin: 0.5rem 0;
+         }
+         a {
+            text-decoration: none;
+            color: #2563eb;
+         }
+         a:hover {
+            text-decoration: underline;
+         }
+         .provider {
+            font-weight: bold;
+            margin-top: 1.5rem;
+         }
+         /* Reset mínimo */
+         * {
+            box-sizing: border-box;
+         }
+         body {
+            font-family:
+               system-ui,
+               -apple-system,
+               BlinkMacSystemFont,
+               sans-serif;
+            background: #f8fafc;
+            margin: 0;
+            padding: 2rem;
+            color: #0f172a;
+         }
+         .provider {
+            margin-top: 3.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #0f172a;
+         }
+         .provider::after {
+            content: "";
+            display: block;
+            height: 2px;
+            width: 36px;
+            background: #6366f1;
+            margin-top: 0.4rem;
+            border-radius: 2px;
+         }
+         /* Grid de cards */
+         ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1rem;
+         }
+         li {
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            transition:
+               transform 0.15s ease,
+               box-shadow 0.15s ease,
+               border-color 0.15s ease;
+         }
+         li a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 72px;
+            padding: 1rem;
+            text-align: center;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 400;
+            line-height: 1.3;
+            letter-spacing: 0.2px;
+            color: #475569; /* slate-600 */
+         }
+         li:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+            border-color: #c7d2fe;
+         }
+         li:hover a {
+            color: #1e293b; /* slate-800 */
+         }
 
-  <style>
-    :root {
-      --violet-900: #2d1b4e;
-      --violet-700: #5b3fd1;
-      --violet-500: #7c5cff;
-      --violet-100: #f2efff;
-      --bg: #f6f5fb;
-      --card-bg: #ffffff;
-      --text-main: #1f1f2e;
-      --text-muted: #6b6b85;
-    }
+         .card a {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+         }
 
-    * {
-      box-sizing: border-box;
-    }
+         html,
+         body {
+            margin: 0;
+            height: 100%;
+         }
 
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-        Roboto, Inter, Helvetica, Arial, sans-serif;
-      background: radial-gradient(
-          1200px 600px at 50% -200px,
-          var(--violet-100),
-          transparent
-        ),
-        var(--bg);
-      color: var(--text-main);
-    }
+         .layout {
+            display: flex;
+            height: 100vh;
+         }
 
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 64px 24px 96px;
-    }
+         .sidebar {
+            width: 380px;
+            overflow-y: auto;
+            border-right: 1px solid #e5e7eb;
+            padding: 1rem;
+            background: #f8fafc;
+         }
 
-    header {
-      text-align: center;
-      margin-bottom: 56px;
-    }
+         .preview {
+            flex: 1;
+            background: #0f172a;
+         }
 
-    header h1 {
-      font-size: 40px;
-      font-weight: 700;
-      margin: 0 0 12px;
-      color: var(--violet-900);
-      letter-spacing: -0.02em;
-    }
+         .preview iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white;
+         }
 
-    header p {
-      max-width: 560px;
-      margin: 0 auto;
-      font-size: 16px;
-      color: var(--text-muted);
-      line-height: 1.6;
-    }
+         /* Nombre */
+         .label {
+            padding: 0.75rem;
+            font-size: 0.8rem;
+            color: #475569;
+            text-align: center;
+         }
 
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 20px;
-    }
+         .card .preview iframe {
+            pointer-events: none;
+         }
+      </style>
+      <script>
+         document.addEventListener("DOMContentLoaded", () => {
+            const iframes = document.querySelectorAll("iframe[data-src]");
 
-    li {
-      margin: 0;
-    }
+            const observer = new IntersectionObserver(
+               (entries) => {
+                  entries.forEach((entry) => {
+                     if (entry.isIntersecting) {
+                        const iframe = entry.target;
+                        iframe.src = iframe.dataset.src;
+                        observer.unobserve(iframe);
+                     }
+                  });
+               },
+               { rootMargin: "200px" },
+            );
 
-    a.card {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 96px;
-      padding: 24px;
-      background: linear-gradient(
-        180deg,
-        #ffffff,
-        #faf9ff
-      );
-      border-radius: 16px;
-      text-decoration: none;
-      color: var(--violet-900);
-      font-weight: 600;
-      font-size: 15px;
-      letter-spacing: 0.01em;
-      border: 1px solid #e7e4ff;
-      box-shadow: 0 8px 24px rgba(91, 63, 209, 0.06);
-      transition:
-        transform 0.18s ease,
-        box-shadow 0.18s ease,
-        border-color 0.18s ease;
-    }
+            iframes.forEach((iframe) => observer.observe(iframe));
+         });
+      </script>
+      <script>
+         document.addEventListener("DOMContentLoaded", () => {
+            const frame = document.getElementById("preview-frame");
 
-    a.card:hover {
-      transform: translateY(-4px);
-      border-color: var(--violet-500);
-      box-shadow: 0 14px 36px rgba(91, 63, 209, 0.18);
-    }
+            document.addEventListener("click", (e) => {
+               const card = e.target.closest(".card");
+               if (!card) return;
 
-    footer {
-      margin-top: 72px;
-      text-align: center;
-      font-size: 13px;
-      color: var(--text-muted);
-    }
+               const iframe = card.querySelector("iframe[data-src]");
+               if (!iframe) return;
 
-    @media (max-width: 480px) {
-      header h1 {
-        font-size: 32px;
-      }
-    }
-  </style>
-</head>
+               const src = iframe.dataset.src;
 
-<body>
-  <div class="container">
-    <header>
-      <h1>TuSitio.ar - Templates</h1>
-      <p>
-        Collection of production-ready templates to kickstart your website
-        project using TuSitio.ar. Browse through various designs and find the
-        perfect fit for your needs.
-      </p>
-    </header>
+               if (frame.src !== src) {
+                  frame.src = src;
+               }
+            });
+         });
+      </script>
+   </head>
+   <body>
+      <div class="layout">
+         <aside class="sidebar">
+            <div class="provider">styleshout</div>
+            <ul>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Abstract_2_0_0/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Abstract_2_0_0</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Augustine_1_0_0/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Augustine_1_0_0</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Booth_1_0_0/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Booth_1_0_0</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Calvin_1_0_0/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Calvin_1_0_0</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Ceevee_2_0_0/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Ceevee_2_0_0</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Count10/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Count10</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Dazzle10/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Dazzle10</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Elevate10/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Elevate10</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Ethos_1_0_0/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Ethos_1_0_0</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Flare_1_0_0/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Flare_1_0_0</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Hesed_1_0_0/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Hesed_1_0_0</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Hola10/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Hola10</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Hudson_1_0_0/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Hudson_1_0_0</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Imminent_1_0_0/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Imminent_1_0_0</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Infinity_2_0_0/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Infinity_2_0_0</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Kairos10/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Kairos10</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Kards10/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Kards10</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Keep_it_simple_3_0_0/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Keep_it_simple_3_0_0</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Khronos_2_0_0/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Khronos_2_0_0</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Knox_1_0_0/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Knox_1_0_0</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Kreative_2_0_0/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Kreative_2_0_0</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Kreo10/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Kreo10</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Lhander10/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Lhander10</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Lounge_1_0_0/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Lounge_1_0_0</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Luther_1_0_0/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Luther_1_0_0</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Maillard_1_0_0/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Maillard_1_0_0</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Monica_1_0_0/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Monica_1_0_0</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Mueller_1_0_0/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Mueller_1_0_0</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Puremedia10/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Puremedia10</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Spurgeon_1_0_0/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Spurgeon_1_0_0</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Sublime10/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Sublime10</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Tyndale_1_0_0/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Tyndale_1_0_0</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Typerite_1_1_0/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Typerite_1_1_0</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Waldo_1_0_0/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Waldo_1_0_0</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Woo10/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Woo10</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/Zoon_2_0_0/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">Zoon_2_0_0</div>
+               </li>
+               <li class="card">
+                  <div class="preview">
+                     <iframe
+                        data-src="./templates/styleshout/epitome_1_0_0/index.html"
+                        loading="lazy"
+                        tabindex="-1"
+                     ></iframe>
+                  </div>
+                  <div class="label">epitome_1_0_0</div>
+               </li>
+            </ul>
+         </aside>
 
-    <ul>
-      <li><a class="card" href="./templates/agency">Agency</a></li>
-      <li><a class="card" href="./templates/barber">Barber</a></li>
-      <li><a class="card" href="./templates/chain">Chain</a></li>
-      <li><a class="card" href="./templates/character">Character</a></li>
-      <li><a class="card" href="./templates/coverflow">Coverflow</a></li>
-      <li><a class="card" href="./templates/eatery">Eatery</a></li>
-      <li><a class="card" href="./templates/fashion">Fashion</a></li>
-      <li><a class="card" href="./templates/gaming">Gaming</a></li>
-      <li><a class="card" href="./templates/glossy">Glossy</a></li>
-      <li><a class="card" href="./templates/golf">Golf</a></li>
-      <li><a class="card" href="./templates/infinite">Infinite</a></li>
-      <li><a class="card" href="./templates/level">Level</a></li>
-      <li><a class="card" href="./templates/magazee">Magazee</a></li>
-      <li><a class="card" href="./templates/mexant">Mexant</a></li>
-      <li><a class="card" href="./templates/nexus">Nexus</a></li>
-      <li><a class="card" href="./templates/personal">Personal</a></li>
-      <li><a class="card" href="./templates/plot">Plot</a></li>
-      <li><a class="card" href="./templates/pop">Pop</a></li>
-      <li><a class="card" href="./templates/portfolio">Portfolio</a></li>
-      <li><a class="card" href="./templates/restaurant">Restaurant</a></li>
-      <li><a class="card" href="./templates/salon">Salon</a></li>
-      <li><a class="card" href="./templates/scholar">Scholar</a></li>
-      <li><a class="card" href="./templates/shop">Shop</a></li>
-      <li><a class="card" href="./templates/sleeky">Sleeky</a></li>
-      <li><a class="card" href="./templates/space">Space</a></li>
-      <li><a class="card" href="./templates/studio">Studio</a></li>
-      <li><a class="card" href="./templates/topic">Topic</a></li>
-      <li><a class="card" href="./templates/travel">Travel</a></li>
-    </ul>
-
-    <footer>
-      © TuSitio · Templates listos para producción
-    </footer>
-  </div>
-</body>
+         <main class="preview">
+            <iframe id="preview-frame"></iframe>
+         </main>
+      </div>
+   </body>
 </html>
