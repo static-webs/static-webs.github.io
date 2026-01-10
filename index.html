@@ -4,25 +4,23 @@
       <meta charset="UTF-8" />
       <title>TuSitio.ar - Templates</title>
       <style>
-         body {
-            font-family: system-ui, sans-serif;
-            padding: 2rem;
-         }
          ul {
             list-style: none;
             padding: 0;
          }
-         li {
-            margin: 0.5rem 0;
-         }
+
          .provider {
-            font-weight: bold;
-            margin-top: 1.5rem;
          }
+
          /* Reset mínimo */
          * {
             box-sizing: border-box;
          }
+
+         h2 {
+            color: dark-gray;
+         }
+
          body {
             font-family:
                system-ui,
@@ -31,17 +29,17 @@
                sans-serif;
             background: #f8fafc;
             margin: 0;
-            padding: 2rem;
             color: #0f172a;
-            height: 100%;
          }
+
          .provider {
-            margin-top: 3.5rem;
+            margin-top: 2.5rem;
             margin-bottom: 1rem;
             font-size: 1.15rem;
-            font-weight: 600;
             color: #0f172a;
+            font-weight: normal;
          }
+
          .provider::after {
             content: "";
             display: block;
@@ -51,6 +49,7 @@
             margin-top: 0.4rem;
             border-radius: 2px;
          }
+
          /* Grid de cards */
          ul {
             list-style: none;
@@ -60,7 +59,9 @@
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 1rem;
          }
+
          li {
+            margin: 0.5rem 0;
             background: #ffffff;
             border-radius: 12px;
             border: 1px solid #e5e7eb;
@@ -69,6 +70,7 @@
                box-shadow 0.15s ease,
                border-color 0.15s ease;
          }
+
          li:hover {
             transform: translateY(-1px);
             box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
@@ -155,6 +157,7 @@
    <body>
       <div class="layout">
          <aside class="sidebar">
+            <h2>TuSitio.ar</h2>
             <div class="provider">styleshout</div>
             <ul>
                <li class="card">
